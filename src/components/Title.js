@@ -2,7 +2,7 @@ import React from 'react';
 
 const Title = () => (
   <div>
-    <h1>Eric's Weather Finder Thing</h1>
+    <h1>What's the weather?</h1>
   </div>
 )
 

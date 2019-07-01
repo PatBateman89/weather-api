@@ -19,14 +19,31 @@ class App extends React.Component {
     description: undefined,
     error: undefined,
     chartData: {
-      labels: ['aaa'],
+      labels: ['Temperature'],
       datasets: [
         {
           label: 'Temperature',
           data: [],
-          backgroundColor:['rgba(255,99,132,0.6)']
+          backgroundColor:['rgba(255,99,132,0.6)'],
+          barPercentage: 0.1,
+          barThickness: 0.2,
+          maxBarThickness: 2
         }
       ]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          barPercentage: 1,
+          barThickness: 200,
+          maxBarThickness: 200,
+          minBarLength: 20,
+          categoryPercentage: 1,
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
     }
   }
 
@@ -40,7 +57,7 @@ class App extends React.Component {
     const data = await api_call.json();
     if (city && country) {
       this.setState({
-        temperature: data.list[0].main.temp,
+        temperature: Math.round(data.list[0].main.temp - 273.15),
         city: data.list[0].name,
         country: data.list[0].sys.country,
         humidity: data.list[0].main.humidity,
@@ -51,7 +68,7 @@ class App extends React.Component {
           datasets: [
             {
               label: 'Temperature',
-              data: [data.list[0].main.temp],
+              data: [data.list[0].main.temp - 273.15],
               backgroundColor:['rgba(255,99,132,0.6)']
             }
           ]
@@ -71,27 +88,26 @@ class App extends React.Component {
           <div className="main">
             <div className="container">
               <div className="row">
-                <div className="col-xs-5 title-container">
+                <div className="col-xl-12 title-container text-center">
                   <Title />
                 </div>
-                <div className="col-xs-7 form-container">
-                  <Form getWeather={this.getWeather}/>
-                  <Weather
-                    temperature={this.state.temperature}
-                    city={this.state.city}
-                    country={this.state.country}
-                    humidity={this.state.humidity}
-                    description={this.state.description}
-                    error={this.state.error}
-                  />
-                  <Bar
-                    height="400"
-                    width="400"
-                    options={{ maintainAspectRatio: false }}
-                    data={this.state.chartData}
-                  />
-                </div>
               </div>
+              <div className="col-xs-6 form-container text-center">
+                <Form getWeather={this.getWeather}/>
+                <Weather
+                  temperature={this.state.temperature}
+                  city={this.state.city}
+                  country={this.state.country}
+                  humidity={this.state.humidity}
+                  description={this.state.description}
+                  error={this.state.error}
+                />
+              </div>
+              <Bar
+                style="position: relative; height: 40vh;"
+                options={this.state.options}
+                data={this.state.chartData}
+              />
             </div>
           </div>
         </div>

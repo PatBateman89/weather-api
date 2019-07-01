@@ -2,10 +2,8 @@ import React from 'react';
 import Title from './components/Title';
 import Form from './components/Form';
 import Weather from './components/Weather';
-import Chart from './components/Chart';
 import { Bar } from 'react-chartjs-2';
-
-const API_KEY = '763eaf05eabc8741220146179a0fa35f';
+require('dotenv').config()
 
 class App extends React.Component {
 
@@ -53,7 +51,8 @@ class App extends React.Component {
     event.preventDefault();
     const city = event.target.elements.city.value;
     const country = event.target.elements.country.value;
-    const api_call = await fetch(`http://api.openweathermap.org/data/2.5/find?q=${city},${country}&appid=${API_KEY}`);
+    const api_key = process.env.REACT_APP_API_KEY
+    const api_call = await fetch(`http://api.openweathermap.org/data/2.5/find?q=${city},${country}&appid=${api_key}`);
     const data = await api_call.json();
     if (city && country) {
       this.setState({
@@ -104,7 +103,6 @@ class App extends React.Component {
                 />
               </div>
               <Bar
-                style="position: relative; height: 40vh;"
                 options={this.state.options}
                 data={this.state.chartData}
               />
